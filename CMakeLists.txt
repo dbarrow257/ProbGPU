@@ -25,16 +25,16 @@ if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
   endif()
 endif()
 
-if(NOT DEFINED ProbGPU_Compiler_Flags_CUDA)
-  set(ProbGPU_Compiler_Flags_CUDA "")
-endif()
+#if(NOT DEFINED ProbGPU_Compiler_Flags_CUDA)
+#  set(ProbGPU_Compiler_Flags_CUDA "")
+#endif()
 
-separate_arguments(ProbGPU_Compiler_Flags_CUDA)
-message(STATUS "Set ProbGPU CUDA compiler options: ${ProbGPU_Compiler_Flags_CUDA}")
-message(STATUS "Set ProbGPU CUDA ARCHITECTURES options: ${CMAKE_CUDA_ARCHITECTURES}")
-string(REPLACE " " ";" CMAKE_CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}")
+#separate_arguments(ProbGPU_Compiler_Flags_CUDA)
+#message(STATUS "Set ProbGPU CUDA compiler options: ${ProbGPU_Compiler_Flags_CUDA}")
+#message(STATUS "Set ProbGPU CUDA ARCHITECTURES options: ${CMAKE_CUDA_ARCHITECTURES}")
+#string(REPLACE " " ";" CMAKE_CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}")
 
-add_compile_options("$<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>")
+#add_compile_options("$<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>")
 add_library(ProbGPU SHARED probGpu.cu)
 
 target_include_directories(
