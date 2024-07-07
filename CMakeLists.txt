@@ -14,17 +14,37 @@ endif()
 
 add_library(ProbGPU SHARED probGpu.cu)
 
-set_target_properties(ProbGPU PROPERTIES 
-			      CUDA_SEPARABLE_COMPILATION ON 
-			      LINKER_LANGUAGE CUDA
-			      EXPORT_NAME ProbGPU)
 
-set_property(TARGET ProbGPU PROPERTY CUDA_ARCHITECTURES 60 61 70 75)
+#KS: Allow user to define CMAKE_CUDA_ARCHITECTURES
+if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+  #KS: See this for more info https://cmake.org/cmake/help/latest/prop_tgt/CUDA_ARCHITECTURES.html
+  if( ${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.23 )
+      set(CMAKE_CUDA_ARCHITECTURES all )
+          #KS: Consider using native, requires cmake 3.24... will be terrible for containers but should results in more optimised code
+      #set(CMAKE_CUDA_ARCHITECTURES native )
+  else()
+  #KS: Apparently with newer cmake and GPU
+      set(CMAKE_CUDA_ARCHITECTURES 60 61 70 75)
+  endif()
+endif()
+
+if(NOT DEFINED NuOscillator_Compiler_Flags_CUDA)
+  set(NuOscillator_Compiler_Flags_CUDA "")
+endif()
+add_compile_options($<$<COMPILE_LANGUAGE:CUDA>:${NuOscillator_Compiler_Flags_CUDA}>)
 
 target_include_directories(
   ProbGPU PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
                        $<INSTALL_INTERFACE:include>
 )
+
+
+set_target_properties(ProbGPU PROPERTIES
+			      CUDA_SEPARABLE_COMPILATION ON
+			      LINKER_LANGUAGE CUDA
+			      EXPORT_NAME ProbGPU)
+
+set_property(TARGET ProbGPU PROPERTY CUDA_ARCHITECTURES ${CMAKE_CUDA_ARCHITECTURES})
 
 install(TARGETS ProbGPU 
                 EXPORT ProbGPU-target
