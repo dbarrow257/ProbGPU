@@ -28,10 +28,10 @@ if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
   endif()
 endif()
 
-if(NOT DEFINED PrbGPU_Compiler_Flags_CUDA)
-  set(PrbGPU_Compiler_Flags_CUDA "")
+if(NOT DEFINED ProbGPU_Compiler_Flags_CUDA)
+  set(ProbGPU_Compiler_Flags_CUDA "")
 endif()
-add_compile_options($<$<COMPILE_LANGUAGE:CUDA>:${PrbGPU_Compiler_Flags_CUDA}>)
+add_compile_options($<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>)
 
 target_include_directories(
   ProbGPU PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
