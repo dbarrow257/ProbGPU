@@ -32,6 +32,7 @@ endif()
 separate_arguments(ProbGPU_Compiler_Flags_CUDA)
 message(STATUS "Set ProbGPU CUDA compiler options: ${ProbGPU_Compiler_Flags_CUDA}")
 message(STATUS "Set ProbGPU CUDA ARCHITECTURES options: ${CMAKE_CUDA_ARCHITECTURES}")
+string(REPLACE " " ";" CMAKE_CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}")
 
 add_compile_options("$<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>")
 add_library(ProbGPU SHARED probGpu.cu)
