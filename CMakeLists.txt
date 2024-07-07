@@ -14,27 +14,25 @@ endif()
 
 #KS: Allow user to define CMAKE_CUDA_ARCHITECTURES
 if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-  #KS: See this for more info https://cmake.org/cmake/help/latest/prop_tgt/CUDA_ARCHITECTURES.html
+      #KS: See this for more info https://cmake.org/cmake/help/latest/prop_tgt/CUDA_ARCHITECTURES.html
   if( ${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.23 )
-      set(CMAKE_CUDA_ARCHITECTURES all )
+      set(CMAKE_CUDA_ARCHITECTURES 60 61 70 75 80 86 )
           #KS: Consider using native, requires cmake 3.24... will be terrible for containers but should results in more optimised code
       #set(CMAKE_CUDA_ARCHITECTURES native )
   else()
   #KS: Apparently with newer cmake and GPU
-      set(CMAKE_CUDA_ARCHITECTURES 60 61 70 75)
+      set(CMAKE_CUDA_ARCHITECTURES 60 61 70 75 80 86)
   endif()
+#KS: Bit hacky but to properly pass cuda flags we need
+string(REPLACE ";" " " CMAKE_CUDA_ARCHITECTURES_STRING "${CMAKE_CUDA_ARCHITECTURES}")
+else()
+#KS this may look hacky however CPM isn't build for passing stuff like this. If CMAKE_CUDA_ARCHITECTURES is passed CPM it will be string not list. Thus we convert it to list
+set(CMAKE_CUDA_ARCHITECTURES_STRING ${CMAKE_CUDA_ARCHITECTURES})
+string(REPLACE " " ";" CMAKE_CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}")
 endif()
 
-#if(NOT DEFINED ProbGPU_Compiler_Flags_CUDA)
-#  set(ProbGPU_Compiler_Flags_CUDA "")
-#endif()
+message(STATUS "Set CUDA ARCHITECTURES options: ${CMAKE_CUDA_ARCHITECTURES_STRING}")
 
-#separate_arguments(ProbGPU_Compiler_Flags_CUDA)
-#message(STATUS "Set ProbGPU CUDA compiler options: ${ProbGPU_Compiler_Flags_CUDA}")
-#message(STATUS "Set ProbGPU CUDA ARCHITECTURES options: ${CMAKE_CUDA_ARCHITECTURES}")
-#string(REPLACE " " ";" CMAKE_CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}")
-
-#add_compile_options("$<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>")
 add_library(ProbGPU SHARED probGpu.cu)
 
 target_include_directories(
