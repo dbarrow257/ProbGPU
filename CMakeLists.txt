@@ -31,8 +31,8 @@ endif()
 if(NOT DEFINED ProbGPU_Compiler_Flags_CUDA)
   set(ProbGPU_Compiler_Flags_CUDA "")
 endif()
-# KS: Remove quotes from the variable
-string(REPLACE "\"" "" ProbGPU_Compiler_Flags_CUDA ${ProbGPU_Compiler_Flags_CUDA})
+
+separate_arguments(ProbGPU_Compiler_Flags_CUDA)
 add_compile_options($<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>)
 
 target_include_directories(
