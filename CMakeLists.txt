@@ -12,9 +12,6 @@ elseif(NOT DEFINED CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/${CMAKE_SYSTEM_NAME}")
 endif()
 
-add_library(ProbGPU SHARED probGpu.cu)
-
-
 #KS: Allow user to define CMAKE_CUDA_ARCHITECTURES
 if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
   #KS: See this for more info https://cmake.org/cmake/help/latest/prop_tgt/CUDA_ARCHITECTURES.html
@@ -36,11 +33,14 @@ separate_arguments(ProbGPU_Compiler_Flags_CUDA)
 message(STATUS "Set ProbGPU CUDA compiler options: ${ProbGPU_Compiler_Flags_CUDA}")
 message(STATUS "Set ProbGPU CUDA ARCHITECTURES options: ${CMAKE_CUDA_ARCHITECTURES}")
 
-add_compile_options($<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>)
+add_compile_options("$<$<COMPILE_LANGUAGE:CUDA>:${ProbGPU_Compiler_Flags_CUDA}>")
+
+add_library(ProbGPU SHARED probGpu.cu)
 
 target_include_directories(
-  ProbGPU PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-                       $<INSTALL_INTERFACE:include>
+  ProbGPU PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:include>
 )
 
 set_target_properties(ProbGPU PROPERTIES
